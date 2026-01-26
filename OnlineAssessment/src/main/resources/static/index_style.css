@@ -1,0 +1,379 @@
+:root {
+  --primary-color: #6a0dad;
+  --secondary-color: #ff6600;
+  --card-bg: #fff;
+  --card-shadow: rgba(0,0,0,0.2);
+  --card-hover: linear-gradient(135deg,#6a0dad,#ff6600);
+  --transition: all 0.4s ease;
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ---------- BODY ---------- */
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  background: linear-gradient(to right, #e0c3fc, #8ec5fc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ---------- PORTAL BOX ---------- */
+.portal-box {
+  background: #fff;
+  border-radius: 25px;
+  padding: 40px 30px;
+  width: 90%;
+  max-width: 900px;
+  text-align: center;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.portal-header {
+  display: flex;
+  justify-content: space-between;  /* space between logos */
+  align-items: center;
+  padding: 20px 30px;
+  border-radius: 25px;
+  margin-bottom: 25px;
+  background-color: #fff;
+  border: 3px solid var(--primary-color);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* College Logo */
+.portal-header img.college-logo {
+  width: auto;      /* keep original size */
+  height: 80px;     /* fixed height */
+  object-fit: contain;
+  border-radius: 10px;
+}
+/* Quiz Logo */
+.portal-header img.quiz-logo {
+  width: auto;      /* keep original size */
+  height: 140px;     /* same height as college logo */
+  object-fit: contain;
+  border-radius: 15px;
+}
+
+.portal-header img.college-logo {
+  /* Keep existing size settings */
+  width: 80%;           /* keep size as you already set */
+  max-width: 100%;      /* never exceed container width */
+  height: auto;         /* maintain aspect ratio */
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;       /* center in header */
+  /* NO extra border here */
+  border-radius: 10px;  /* optional, for smooth edges */
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .portal-header img.college-logo {
+    width: 90%; /* slightly bigger on small screens */
+  }
+}
+
+
+.portal-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.portal-header h2 {
+  margin: 5px 0 0 0;
+  font-size: 15px;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* ---------- SECTION TITLE ---------- */
+.section-title {
+  font-size: 20px;
+  margin-bottom: 30px;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* ---------- ROLE CARDS ---------- */
+.card-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 30px;
+}
+
+.role-card {
+  flex: 1 1 30%;
+  max-width: 220px;
+  background-color: var(--card-bg);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 12px 25px var(--card-shadow);
+  cursor: pointer;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.role-card:hover {
+  transform: translateY(-8px) scale(1.05);
+  background: var(--card-hover);
+  color: #fff;
+}
+
+.role-card .icon {
+  font-size: 50px;
+  margin-bottom: 15px;
+}
+
+.role-card h3 {
+  margin: 10px 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.role-card p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 0;
+}
+
+/* ---------- DASHBOARD CARDS ---------- */
+.dashboard-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.dashboard-cards .role-card {
+  flex: 1 1 180px;
+  max-width: 200px;
+}
+
+/* Logout card pinned at bottom */
+.logout-btn {
+  margin-top: auto;
+  background: #f44336 !important;
+  color: #fff !important;
+}
+
+/* ---------- HIDDEN CLASS ---------- */
+.hidden {
+  display: none;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 768px) {
+  .card-container, .dashboard-cards {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .role-card {
+    width: 90%;
+    max-width: 300px;
+  }
+
+  .portal-header {
+    justify-content: center; /* center on small screens */
+  }
+}
+.dashboard-header {
+  display: flex;
+  justify-content: flex-end;  /* 🔹 Pushes help icon fully to the right */
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 0 15px;
+  position: relative;
+}
+/* ---------- FINAL OVERRIDE: TEXT-ONLY HELP ICON ---------- */
+.help-icon {
+  all: unset;  /* 💥 Resets all previous properties */
+  font-size: 17px;
+  font-weight: 600;
+  color: #007bff;
+  cursor: pointer;
+  animation: blink 1.2s infinite;
+  transition: color 0.3s, transform 0.2s;
+  margin-right: 10px;
+}
+
+.help-icon:hover {
+  color: #ff6600;
+  transform: scale(1.1);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+/* ---------- PORTAL FOOTER (SOFT COLOR + THICK TEXT) ---------- */
+.portal-footer {
+	
+  width: 95%;
+  margin-top: 35px;
+
+  /* Softer, very light green */
+  background: linear-gradient(
+    to right,
+    #f1f8f4,
+    #eaf5ef
+  );
+
+  border: 1px solid #d6e8dd;
+  border-radius: 14px;
+
+  padding: 14px 20px;
+  text-align: center;
+
+  font-size: 15px;
+  font-weight: 600;          /* 🔥 thicker text */
+  letter-spacing: 0.4px;     /* improves readability */
+  color: #000;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.portal-footer strong {
+  font-weight: 700;          /* extra emphasis */
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .portal-footer {
+    font-size: 13px;
+    padding: 12px 14px;
+  }
+}
+/* ===== Faculty name color in dashboard ===== */
+#dashboard #welcomeMsg .faculty-name {
+  color: #800000;   /* maroon red */
+  font-weight: bold;
+}
+/* ================= SESSION EXPIRED MODAL ================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #ffffff;
+  width: 90%;
+  max-width: 380px;
+  padding: 30px 25px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  animation: popIn 0.3s ease-out;
+}
+
+.modal-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.modal-content h2 {
+  margin: 10px 0;
+  color: #d32f2f;
+  font-size: 22px;
+}
+
+.modal-content p {
+  font-size: 15px;
+  color: #555;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.modal-btn {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.modal-btn:hover {
+  background: #0d47a1;
+  transform: translateY(-1px);
+}
+
+/* Animation */
+@keyframes popIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ========================================================= */
+
+.role-card {
+  flex: 1 1 30%;
+  max-width: 220px;
+  background-color: var(--card-bg);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 12px 25px var(--card-shadow);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.4s ease;
+}
+
+.role-card:hover {
+  transform: translateY(-8px) scale(1.05);
+  background: var(--card-hover);
+  color: #fff;
+}
+
+.role-card .icon {
+  font-size: 50px;
+  margin-bottom: 15px;
+}
+
+.role-card h3 {
+  margin: 10px 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.role-card p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 0;
+}
+
+/* Logout special card */
+.logout-btn {
+  background: #f44336 !important;
+  color: #fff !important;
+}
+
+
