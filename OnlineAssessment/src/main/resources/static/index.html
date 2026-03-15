@@ -55,6 +55,14 @@
 
 	<!-- Student Fields -->
 	<div id="studentFields">
+	  <div class="student-type-selection" style="margin-bottom: 15px; display: flex; gap: 20px; justify-content: center;">
+	    <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+	      <input type="radio" name="studentLoginType" value="academic" checked> Academic Login
+	    </label>
+	    <label style="cursor: pointer; display: flex; align-items: center; gap: 5px;">
+	      <input type="radio" name="studentLoginType" value="event"> MITS_Event Login
+	    </label>
+	  </div>
 	  <input type="text" id="studentRoll" placeholder="Roll Number" class="login-input">
 	  <div class="password-wrapper">
 	    <input type="password" id="studentPassword" placeholder="Password" class="login-input" autocomplete="new-password">
@@ -91,68 +99,141 @@
     </div>
 
     <button id="loginBtn" class="login-btn">Login</button>
-    <button id="backBtn" class="back-btn">Back</button>
   </div>
 
   <!-- ---------- DASHBOARD ---------- -->
   <div id="dashboard" class="hidden">
-    <h3 id="welcomeMsg"></h3>
+    <div id="dashboardHeader" class="dashboard-header">
+        <h3 id="welcomeMsg"></h3>
+        <div class="profile-container" id="profileContainer">
+            <button class="profile-btn" id="profileBtn">👤 Profile</button>
+            <div class="profile-dropdown hidden" id="profileDropdown">
+                <div class="profile-item" id="viewProfileDetails">ℹ️ Details</div>
+                <div class="profile-item" id="viewHelpLink">❓ Help</div>
+                <div class="profile-item logout-btn" id="profileLogout">🔒 Logout</div>
+            </div>
+        </div>
+    </div>
 
     <!-- Student Dashboard -->
+    <!-- Student Dashboard: Two Main Portals -->
 	<div id="studentDashboard" class="dashboard-cards hidden">
-	  <div class="role-card" id="takeQuizBtn">
-	    <div class="icon">🎯</div>
-	    <h3>Take Quiz</h3>
-	    <p>Start and attempt quizzes assigned to you</p>
+	  <div class="role-card" id="studentAcademicPortalBtn">
+	    <div class="icon">🎓</div>
+	    <h3>Academic Portal</h3>
+	    <p>Access regular subjects and semester quizzes</p>
 	  </div>
-	  <div class="role-card" id="viewResultBtn">
-	    <div class="icon">📊</div>
-	    <h3>View Result</h3>
-	    <p>Check your past quiz results</p>
-	  </div>
-	  <div class="role-card logout-btn" id="studentLogout">
-	    <div class="icon">🔒</div>
-	    <h3>Logout</h3>
+	  <div class="role-card" id="studentEventsPortalBtn">
+	    <div class="icon">🎟️</div>
+	    <h3>Events Portal</h3>
+	    <p>Access registered Event quizzes and contests</p>
 	  </div>
 	</div>
 
+    <!-- Student Academic Section -->
+    <div id="studentAcademicSection" class="hidden">
+        <h3 class="section-divider">📚 Academic Quizzes</h3>
+        <div class="dashboard-cards">
+            <div class="role-card" id="takeQuizBtn">
+                <div class="icon">🎯</div>
+                <h3>Take Quiz</h3>
+            </div>
+            <div class="role-card" id="viewResultBtn">
+                <div class="icon">📊</div>
+                <h3>View Result</h3>
+            </div>
+        </div>
+    </div>
 
-	<!-- Faculty Dashboard -->
+    <!-- Student Events Section -->
+    <div id="studentEventsSection" class="hidden">
+        <h3 class="section-divider">🎪 Event Quizzes</h3>
+        <div class="dashboard-cards">
+            <div class="role-card" id="takeEventQuizBtn">
+                <div class="icon">🎫</div>
+                <h3>Take Event Quiz</h3>
+            </div>
+            <div class="role-card" id="viewEventResultBtn">
+                <div class="icon">🏅</div>
+                <h3>View Event Result</h3>
+            </div>
+        </div>
+    </div>
+
+
+	<!-- Faculty Dashboard: Two Main Portals -->
 	<div id="facultyDashboard" class="hidden">
-	  
 	  <div class="dashboard-cards">
-	    <div class="role-card" id="uploadStudentBtn">
-	      <div class="icon">📁</div>
-	      <h3>Upload Student Excel</h3>
-	      <p>Upload or update student details quickly.</p>
+	    <div class="role-card" id="academicExamsMenuBtn">
+	      <div class="icon">📚</div>
+	      <h3>Manage Academic Exams</h3>
+	      <p>Handle standard quizzes and results.</p>
 	    </div>
-	    <div class="role-card" id="addQuizBtn">
-	      <div class="icon">➕</div>
-	      <h3>Add Quiz</h3>
-	      <p>Create new quizzes and upload questions.</p>
-	    </div>
-	    <div class="role-card" id="activateQuizBtn">
-	      <div class="icon">✅</div>
-	      <h3>Activate Quiz</h3>
-	      <p>Set quizzes live for students to attempt.</p>
-	    </div>
-	    <div class="role-card" id="viewClassResultsBtn">
-	      <div class="icon">📋</div>
-	      <h3>View Class Results</h3>
-	      <p>Check student performance and rankings.</p>
-	    </div>
-	    <div class="role-card" id="publishResultBtn">
-	      <div class="icon">📝</div>
-	      <h3>Publish Result</h3>
-	      <p>Make quiz results visible to students.</p>
-	    </div>
-	    <div class="role-card logout-btn" id="facultyLogout">
-	      <div class="icon">🔒</div>
-	      <h3>Logout</h3>
-	      <p>Sign out from your account.</p>
+	    <div class="role-card" id="manageEventMenuBtn">
+	      <div class="icon">🎪</div>
+	      <h3>Manage Events</h3>
+	      <p>Handle event registration and event tasks.</p>
 	    </div>
 	  </div>
 	</div>
+
+    <!-- Faculty Academic Section -->
+    <div id="facultyAcademicSection" class="hidden">
+        <h3 class="section-divider">🎓 Academic Exam Management</h3>
+        <div class="dashboard-cards">
+            <div class="role-card" id="uploadStudentBtn">
+                <div class="icon">📁</div>
+                <h3>Upload Student Excel</h3>
+            </div>
+            <div class="role-card" id="addQuizBtn">
+                <div class="icon">➕</div>
+                <h3>Add Quiz</h3>
+            </div>
+            <div class="role-card" id="activateQuizBtn">
+                <div class="icon">✅</div>
+                <h3>Activate Quiz</h3>
+            </div>
+            <div class="role-card" id="viewClassResultsBtn">
+                <div class="icon">📋</div>
+                <h3>View Class Results</h3>
+            </div>
+            <div class="role-card" id="publishResultBtn">
+                <div class="icon">📝</div>
+                <h3>Publish Result</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Faculty Event Section (Manage Events leads to cards) -->
+    <div id="facultyEventSection" class="hidden">
+        <h3 class="section-divider">🎪 Event Management Center</h3>
+        <div class="dashboard-cards">
+            <div class="role-card" id="createEventBtn">
+                <div class="icon">📝</div>
+                <h3>Create Event</h3>
+            </div>
+            <div class="role-card" id="uploadEventStudentsBtn">
+                <div class="icon">👥</div>
+                <h3>Upload Students</h3>
+            </div>
+            <div class="role-card" id="addEventQuestionsBtn">
+                <div class="icon">📄</div>
+                <h3>Add Event Questions</h3>
+            </div>
+            <div class="role-card" id="activateEventQuizBtn">
+                <div class="icon">✅</div>
+                <h3>Activate Event Quiz</h3>
+            </div>
+            <div class="role-card" id="viewEventResultsBtn">
+                <div class="icon">🏆</div>
+                <h3>View Event Results</h3>
+            </div>
+            <div class="role-card" id="publishEventResultBtn">
+                <div class="icon">📢</div>
+                <h3>Publish Event Result</h3>
+            </div>
+        </div>
+    </div>
 
 	<!-- Admin Dashboard -->
 	<div id="adminDashboard" class="hidden">
@@ -174,21 +255,17 @@
 		      <p>Add or remove departments dynamically.</p>
 		    </div>
 
-	    <div class="role-card logout-btn" id="adminLogout">
-	      <div class="icon">🔒</div>
-	      <h3>Logout</h3>
-	      <p>Sign out from your account.</p>
-	    </div>
 	  </div>
-	</div>
+	</div> <!-- End of Admin Dashboard -->
+  </div> <!-- End of Dashboard -->
 
   <!-- ✅ FOOTER INSIDE PORTAL BOX -->
     <div class="portal-footer">
-      Developed by <strong>Vineeth sai</strong> & <strong>Yaswanth Reddy</strong>,
-      Dept of CSE (2023–2027 Batch) |
-      Mentor <strong>Mr. B Anandaraj Asst.Prof</strong>
+      Developed by <strong>Vineeth Sai</strong> & <strong>Yaswanth Reddy</strong>, 
+      Dept of CSE (2023–2027 Batch) | 
+      Mentor <strong>Mr. B Anandaraj Asst.Prof</strong>, Dept of CSE
     </div>
-</div>
+</div> <!-- End of Portal Box -->
 
 <!-- ================= SESSION EXPIRED MODAL ================= -->
 <div id="sessionExpiredModal" class="modal hidden">

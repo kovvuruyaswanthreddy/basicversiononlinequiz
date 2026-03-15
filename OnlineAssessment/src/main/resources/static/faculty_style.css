@@ -213,6 +213,23 @@
   font-weight: 600;
 }
 
+/* ---------- SECTION DIVIDERS ---------- */
+.dashboard-section {
+  margin-bottom: 40px;
+  padding: 10px;
+}
+
+.section-divider {
+  color: #6a0dad;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 
 
 

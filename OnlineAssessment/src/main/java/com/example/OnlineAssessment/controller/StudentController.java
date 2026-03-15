@@ -32,7 +32,6 @@ public class StudentController {
         );
 
         if (s != null) {
-
             String token = jwtUtil.generateToken(
                     s.getStudentRollNumber(),
                     "STUDENT"
@@ -42,13 +41,17 @@ public class StudentController {
             response.put("token", token);
             response.put("rollNumber", s.getStudentRollNumber());
             response.put("name", s.getStudentName());
+            response.put("section", s.getStudentSection());
+            response.put("year", s.getStudentYear());
+            response.put("department", s.getDepartment());
+            response.put("email", s.getStudentEmail());
             response.put("role", "STUDENT");
 
             return ResponseEntity.ok(response);
         }
 
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)  // ✅ 400 instead of 401
+                .status(HttpStatus.BAD_REQUEST)
                 .body("Invalid student roll number or password");
 
     }

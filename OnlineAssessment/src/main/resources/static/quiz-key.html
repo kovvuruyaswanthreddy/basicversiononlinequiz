@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Quiz Key Review – MITS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f3ff;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .page-header {
+            background: linear-gradient(135deg, #1a237e, #4a148c);
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header-title { font-size: 26px; font-weight: 900; letter-spacing: 1.5px; }
+        .header-subtitle { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+
+        .score-badge {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(10px);
+            padding: 12px 28px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-badge .total { font-size: 32px; font-weight: 900; line-height: 1; }
+        .score-badge .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; margin-top: 4px; }
+
+        /* ── Legend ── */
+        .legend {
+            display: flex;
+            gap: 20px;
+            padding: 15px 40px;
+            background: #fff;
+            border-bottom: 1px solid #e8e0f7;
+            flex-wrap: wrap;
+        }
+
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+        .legend-dot { width: 14px; height: 14px; border-radius: 50%; }
+        .legend-dot.correct   { background: #2e7d32; }
+        .legend-dot.wrong     { background: #c62828; }
+        .legend-dot.selected  { background: #1565c0; }
+        .legend-dot.skipped   { background: #9e9e9e; }
+
+        /* ── Main Content ── */
+        .content { max-width: 960px; margin: 0 auto; padding: 30px 20px 60px; }
+
+        /* ── Question Card ── */
+        .question-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 15px rgba(74,20,140,0.06);
+            border: 1px solid #e8e0f7;
+            transition: box-shadow 0.2s;
+        }
+
+        .question-card:hover { box-shadow: 0 8px 25px rgba(74,20,140,0.1); }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            gap: 16px;
+        }
+
+        .question-num {
+            font-size: 12px;
+            font-weight: 800;
+            background: #ede7f6;
+            color: #4a148c;
+            padding: 4px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .question-text {
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.65;
+            color: #1a1a2e;
+            flex: 1;
+            white-space: pre-wrap;
+        }
+
+        .marks-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .marks-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        .marks-badge.positive { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .marks-badge.negative { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        .marks-badge.zero     { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+
+        /* ── Options ── */
+        .options { display: flex; flex-direction: column; gap: 12px; }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 2px solid #ede7f6;
+            background: #fafafa;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        /* States */
+        .option-row.correct-answer {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .option-row.student-wrong {
+            border-color: #c62828;
+            background: #ffebee;
+        }
+
+        .option-row.student-correct {
+            border-color: #2e7d32;
+            background: #c8e6c9;
+        }
+
+        .option-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #ede7f6;
+            color: #4a148c;
+            font-weight: 800;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .option-row.correct-answer .option-badge,
+        .option-row.student-correct .option-badge { background: #2e7d32; color: #fff; }
+        .option-row.student-wrong   .option-badge { background: #c62828; color: #fff; }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .option-row.student-wrong .option-text { text-decoration: line-through; color: #c62828; }
+        .option-row.correct-answer .option-text,
+        .option-row.student-correct .option-text { font-weight: 700; }
+
+        .option-tag {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        .option-tag.correct-tag  { background: #2e7d32; color: #fff; }
+        .option-tag.your-tag     { background: #1565c0; color: #fff; }
+        .option-tag.wrong-tag    { background: #c62828; color: #fff; }
+
+        /* ── Result Strip ── */
+        .result-strip {
+            margin-top: 18px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .result-strip.correct { background: #e8f5e9; color: #2e7d32; }
+        .result-strip.wrong   { background: #ffebee; color: #c62828; }
+        .result-strip.skipped { background: #f5f5f5; color: #757575; }
+
+        .result-strip .result-icon { font-size: 22px; }
+        .result-strip .marks-earned { margin-left: auto; font-size: 20px; }
+
+        /* ── Summary Bar ── */
+        .summary-bar {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 20px 40px;
+            background: #fff;
+            border-bottom: 1px solid #e8e0f7;
+        }
+
+        .stat-item {
+            text-align: center;
+            min-width: 90px;
+        }
+
+        .stat-value { font-size: 26px; font-weight: 900; }
+        .stat-label { font-size: 11px; text-transform: uppercase; color: #666; margin-top: 2px; }
+        .stat-item.correct-stat .stat-value { color: #2e7d32; }
+        .stat-item.wrong-stat .stat-value   { color: #c62828; }
+        .stat-item.skip-stat .stat-value    { color: #9e9e9e; }
+        .stat-item.score-stat .stat-value   { color: #4a148c; }
+
+        /* Loading */
+        #loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+            gap: 16px;
+        }
+
+        .spinner {
+            width: 48px; height: 48px;
+            border: 5px solid #ede7f6;
+            border-top-color: #7b1fa2;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .error-msg {
+            max-width: 500px;
+            margin: 60px auto;
+            text-align: center;
+            padding: 40px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="loading">
+    <div class="spinner"></div>
+    <p style="font-weight:600; color:#666;">Loading your quiz review…</p>
+</div>
+
+<div id="app" style="display:none;">
+    <div class="page-header">
+        <div>
+            <div class="header-title">📋 QUIZ KEY REVIEW</div>
+            <div class="header-subtitle" id="headerSubtitle">MITS Online Assessment Portal</div>
+        </div>
+        <div class="score-badge">
+            <div class="total" id="totalScore">-</div>
+            <div class="label">TOTAL SCORE</div>
+        </div>
+    </div>
+
+    <div class="summary-bar" id="summaryBar"></div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="legend-dot correct"></div> Correct Answer</div>
+        <div class="legend-item"><div class="legend-dot selected"></div> Your Answer (Correct)</div>
+        <div class="legend-item"><div class="legend-dot wrong"></div> Your Wrong Answer</div>
+        <div class="legend-item"><div class="legend-dot skipped"></div> Not Answered</div>
+    </div>
+
+    <div class="content" id="questionsContainer"></div>
+</div>
+
+<script>
+(function() {
+    const KEY = "quiz_key_data";
+    const raw = localStorage.getItem(KEY);
+
+    function showError(msg) {
+        document.getElementById("loading").innerHTML = `
+            <div class="error-msg">
+                <div style="font-size:48px;">😕</div>
+                <h2 style="margin:16px 0 8px;">Oops!</h2>
+                <p style="color:#666;">${msg}</p>
+            </div>`;
+    }
+
+    if (!raw) { showError("No key data found. Please open this page from the Results section."); return; }
+
+    let data;
+    try { data = JSON.parse(raw); } catch(e) { showError("Invalid data. Please try again."); return; }
+
+    localStorage.removeItem(KEY);
+
+    const { quizName, quizId, studentName, rollNumber, questions, studentAnswers } = data;
+
+    const OPTION_KEYS = ["option1","option2","option3","option4"];
+    const OPTION_LABELS = ["A","B","C","D"];
+
+    let totalCorrect = 0, totalWrong = 0, totalSkipped = 0, totalScore = 0, totalMaxMarks = 0;
+
+    const cards = questions.map((q, i) => {
+        const correctOpts = q.correctOption ? q.correctOption.split(",").map(s => s.trim()) : [];
+        const studentOpts = studentAnswers[q.questionId] ? studentAnswers[q.questionId].split(",").map(s => s.trim()) : [];
+        const answered    = studentOpts.length > 0;
+        const isCorrect   = answered && correctOpts.sort().join(",") === studentOpts.sort().join(",");
+
+        const marks = q.marks || 1;
+        const negMarks = q.negativeMarks || 0;
+
+        let earned = 0;
+        let status = "skipped";
+        if (!answered) {
+            totalSkipped++;
+            status = "skipped";
+        } else if (isCorrect) {
+            totalCorrect++;
+            earned = marks;
+            totalScore += marks;
+            status = "correct";
+        } else {
+            totalWrong++;
+            earned = -negMarks;
+            totalScore -= negMarks;
+            status = "wrong";
+        }
+        totalMaxMarks += marks;
+
+        const optionsHTML = OPTION_KEYS.map((key, idx) => {
+            const optText = q[key];
+            if (!optText) return "";
+            const optKey = `option${idx+1}`;
+            const isCorrectOpt  = correctOpts.includes(optKey);
+            const isStudentOpt  = studentOpts.includes(optKey);
+
+            let rowClass = "";
+            let tags = [];
+
+            if (isCorrectOpt && isStudentOpt) {
+                rowClass = "student-correct";
+                tags.push(`<span class="option-tag correct-tag">✓ Correct</span>`);
+                tags.push(`<span class="option-tag your-tag">Your Answer</span>`);
+            } else if (isCorrectOpt) {
+                rowClass = "correct-answer";
+                tags.push(`<span class="option-tag correct-tag">✓ Correct Answer</span>`);
+            } else if (isStudentOpt) {
+                rowClass = "student-wrong";
+                tags.push(`<span class="option-tag wrong-tag">✗ Your Answer</span>`);
+            }
+
+            return `
+                <div class="option-row ${rowClass}">
+                    <div class="option-badge">${OPTION_LABELS[idx]}</div>
+                    <div class="option-text">${optText}</div>
+                    ${tags.join("")}
+                </div>`;
+        }).join("");
+
+        // Result strip
+        let stripClass, stripIcon, marksText;
+        if (status === "correct") {
+            stripClass = "correct"; stripIcon = "✅";
+            marksText = `+${marks} mark${marks !== 1 ? "s" : ""}`;
+        } else if (status === "wrong") {
+            stripClass = "wrong"; stripIcon = "❌";
+            marksText = negMarks > 0 ? `-${negMarks} mark${negMarks !== 1 ? "s" : ""} (negative)` : "0 marks";
+        } else {
+            stripClass = "skipped"; stripIcon = "⏭️";
+            marksText = "0 marks (not attempted)";
+        }
+
+        // Marks badges
+        const marksBadges = `
+            <span class="marks-badge positive">+${marks} for correct</span>
+            ${negMarks > 0 ? `<span class="marks-badge negative">-${negMarks} for wrong</span>` : '<span class="marks-badge zero">No negative marking</span>'}`;
+
+        return `
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="question-num">Q ${i + 1}</div>
+                    <div class="question-text">${q.questionText}</div>
+                </div>
+                <div class="marks-badges">${marksBadges}</div>
+                <div class="options">${optionsHTML}</div>
+                <div class="result-strip ${stripClass}">
+                    <span class="result-icon">${stripIcon}</span>
+                    <span>${status === 'correct' ? 'Correct!' : status === 'wrong' ? 'Incorrect' : 'Not Attempted'}</span>
+                    <span class="marks-earned">${marksText}</span>
+                </div>
+            </div>`;
+    });
+
+    // Render header info
+    document.getElementById("headerSubtitle").textContent =
+        `${studentName} (${rollNumber}) — ${quizName}`;
+    document.getElementById("totalScore").textContent =
+        `${totalScore.toFixed(totalScore % 1 === 0 ? 0 : 1)} / ${totalMaxMarks}`;
+
+    // Summary bar
+    document.getElementById("summaryBar").innerHTML = `
+        <div class="stat-item correct-stat"><div class="stat-value">✅ ${totalCorrect}</div><div class="stat-label">Correct</div></div>
+        <div class="stat-item wrong-stat"><div class="stat-value">❌ ${totalWrong}</div><div class="stat-label">Wrong</div></div>
+        <div class="stat-item skip-stat"><div class="stat-value">⏭️ ${totalSkipped}</div><div class="stat-label">Skipped</div></div>
+        <div class="stat-item score-stat"><div class="stat-value" style="color:${totalScore >= 0 ? '#2e7d32' : '#c62828'}">${totalScore >= 0 ? '+' : ''}${totalScore.toFixed(1)}</div><div class="stat-label">Total Score</div></div>
+        <div class="stat-item"><div class="stat-value" style="color:#1565c0">${((totalScore / totalMaxMarks) * 100).toFixed(1)}%</div><div class="stat-label">Percentage</div></div>`;
+
+    document.getElementById("questionsContainer").innerHTML = cards.join("");
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("app").style.display = "block";
+})();
+</script>
+</body>
+</html>

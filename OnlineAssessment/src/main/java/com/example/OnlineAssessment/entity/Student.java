@@ -17,7 +17,7 @@
 	    private String department;
 	    private String studentEmail;
 	    private String password;
-	
+
 	    // Getters & Setters
 	    public String getStudentRollNumber() { return studentRollNumber; }
 	    public void setStudentRollNumber(String studentRollNumber) { this.studentRollNumber = studentRollNumber; }
@@ -40,3 +40,5 @@
 	    public String getPassword() { return password; }
 	    public void setPassword(String password) { this.password = password; }
 	}
+
+

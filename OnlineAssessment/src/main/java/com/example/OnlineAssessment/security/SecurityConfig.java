@@ -22,7 +22,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
             	    // Public pages
-            	    .requestMatchers("/", "/index.html", "/faculty_help.html").permitAll()
+            	    .requestMatchers("/", "/index.html", "/quiz-key.html", "/class-results.html", "/faculty_help.html", "/admin_help.html", "/error").permitAll()
 
             	    // Static files
             	    .requestMatchers(
@@ -37,13 +37,15 @@ public class SecurityConfig {
             	        "/student/validate",
             	        "/faculty/validate",
             	        "/admin/validate",
+            	        "/departments/**", "/departments",
             	        "/ping",
-            	        "/password/student/**",   // <-- add this
-            	        "/password/faculty/**"
+            	        "/password/student/**",
+            	        "/password/faculty/**",
+            	        "/event/student/login",
+            	        "/event/**",
+            	        "/results/**",
+            	        "/results/student/**"
             	    ).permitAll()
-
-            	    // ✅ All /departments endpoints require JWT but any role
-            	    .requestMatchers("/departments/**").authenticated()
 
             	    // Everything else secured
             	    .anyRequest().authenticated()

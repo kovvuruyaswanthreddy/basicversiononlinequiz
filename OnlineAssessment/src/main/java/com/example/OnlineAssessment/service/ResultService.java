@@ -4,6 +4,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.OnlineAssessment.entity.Options;
+import com.example.OnlineAssessment.entity.Questions;
 import com.example.OnlineAssessment.entity.Quiz;
 import com.example.OnlineAssessment.entity.Result;
 import com.example.OnlineAssessment.entity.Student;
@@ -35,6 +36,7 @@ public class ResultService {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     // ================== Evaluate and save student result ==================
+    @Transactional
     public Result evaluateAndSaveResult(String rollNumber, String quizId,
                                         Map<String, String> answers) throws Exception {
 
@@ -48,13 +50,14 @@ public class ResultService {
         Quiz quiz = quizRepo.findById(quizId)
                 .orElseThrow(() -> new RuntimeException("Quiz not found"));
 
-        int score = 0;
+        double score = 0;
 
         for (Map.Entry<String, String> entry : answers.entrySet()) {
             Options correctOptionObj =
                     optionsRepo.findByQuestion_QuestionId(entry.getKey()).orElse(null);
 
             if (correctOptionObj != null) {
+                Questions q = correctOptionObj.getQuestion();
                 List<String> correctOptions =
                         Arrays.stream(correctOptionObj.getCorrectOption().split(","))
                               .map(String::trim).toList();
@@ -65,7 +68,9 @@ public class ResultService {
 
                 if (correctOptions.size() == selectedOptions.size()
                         && correctOptions.containsAll(selectedOptions)) {
-                    score++;
+                    score += q.getMarks();
+                } else {
+                    score -= q.getNegativeMarks();
                 }
             }
         }
@@ -81,6 +86,7 @@ public class ResultService {
     }
 
     // ================== Fetch student results if published ==================
+    @Transactional(readOnly = true)
     public List<Result> getStudentResults(String rollNumber, String quizId) {
         Student student = studentRepo.findByStudentRollNumber(rollNumber)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -97,6 +103,27 @@ public class ResultService {
         }
 
         return resultRepo.findResultsByStudentAndQuiz(rollNumber, quizId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Result> getStudentAllResults(String rollNumber) {
+        Student student = studentRepo.findByStudentRollNumber(rollNumber)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        List<Result> allResults = resultRepo.findByStudent_StudentRollNumber(rollNumber);
+        
+        return allResults.stream().filter(r -> 
+            quizService.areResultsPublished(
+                r.getQuiz().getQuizId(),
+                student.getStudentSection(),
+                student.getDepartment(),
+                student.getStudentYear()
+            )
+        ).peek(r -> {
+            int total = r.getQuiz().getQuestions().stream().mapToInt(Questions::getMarks).sum();
+            r.setTotalMarks(total);
+            r.setPassFail((r.getScore()/total)*100 >= 40 ? "Pass" : "Fail");
+        }).toList();
     }
 
     // ================== Fetch all results by filter ==================
@@ -153,10 +180,10 @@ public class ResultService {
         for (int i = 0; i < results.size(); i++) {
             Result r = results.get(i);
 
-            int totalMarks = r.getQuiz().getQuestions().size();
+            int totalMarks = r.getQuiz().getQuestions().stream().mapToInt(Questions::getMarks).sum();
             r.setTotalMarks(totalMarks);
 
-            r.setPassFail(((double) r.getScore() / totalMarks) * 100 >= 40 ? "Pass" : "Fail");
+            r.setPassFail((r.getScore() / totalMarks) * 100 >= 40 ? "Pass" : "Fail");
 
             if (i > 0 && r.getScore() == results.get(i - 1).getScore()) {
                 r.setRank(results.get(i - 1).getRank());

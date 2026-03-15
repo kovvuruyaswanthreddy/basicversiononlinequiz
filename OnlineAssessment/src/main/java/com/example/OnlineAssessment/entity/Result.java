@@ -18,7 +18,7 @@ public class Result {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int score;
+    private double score;
 
     private LocalDateTime submissionTime;   // ✅ tie-breaker
 
@@ -51,8 +51,8 @@ public class Result {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public int getScore() { return score; }
-    public void setScore(int score) { this.score = score; }
+    public double getScore() { return score; }
+    public void setScore(double score) { this.score = score; }
 
     public LocalDateTime getSubmissionTime() { return submissionTime; }
     public void setSubmissionTime(LocalDateTime submissionTime) {

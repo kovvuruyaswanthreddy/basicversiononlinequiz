@@ -60,6 +60,13 @@ public class ResultController {
         return resultService.getStudentResults(rollNumber, quizId);
     }
 
+    @GetMapping("/student/all")
+    public ResponseEntity<?> getStudentAllResults(@RequestParam String rollNumber) {
+        // Removed broad try-catch to allow seeing actual errors (like LazyInitialization or StudentNotFound) in logs/browser
+        List<Result> results = resultService.getStudentAllResults(rollNumber);
+        return ResponseEntity.ok(results);
+    }
+
  // ✅ Check if student has already attempted
     @GetMapping("/student/attempted")
     public boolean hasStudentAttempted(

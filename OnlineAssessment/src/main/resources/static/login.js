@@ -7,7 +7,6 @@ const facultyFields = document.getElementById("facultyFields");
 const adminFields = document.getElementById("adminFields");
 const loginBtn = document.getElementById("loginBtn");
 const loginError = document.getElementById("loginError");
-const backBtn = document.getElementById("backBtn");
 
 const dashboard = document.getElementById("dashboard");
 const welcomeMsg = document.getElementById("welcomeMsg");
@@ -25,7 +24,6 @@ roleCards.forEach(card => {
 
         loginSection.classList.add("show");
         loginError.textContent = "";
-        backBtn.style.display = "block";
 
         studentFields.style.display = "none";
         facultyFields.style.display = "none";
@@ -37,6 +35,8 @@ roleCards.forEach(card => {
 
         loginTitle.textContent = `${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Login`;
 
+        history.pushState({ screen: "login", role: selectedRole }, "");
+
         // 👇 Add this line to scroll smoothly to the login box
         setTimeout(() => {
             loginSection.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -44,15 +44,35 @@ roleCards.forEach(card => {
     });
 });
 
-// -------------------- BACK BUTTON --------------------
-backBtn.addEventListener("click", () => {
-    loginSection.classList.remove("show");
-    selectedRole = null;
-    loginError.textContent = "";
-    studentFields.querySelectorAll("input").forEach(i => i.value = "");
-    facultyFields.querySelectorAll("input").forEach(i => i.value = "");
-    adminFields.querySelectorAll("input").forEach(i => i.value = "");
+window.addEventListener("popstate", (e) => {
+    const state = e.state;
+    if (!state) return;
+
+    if (state.screen === "roleSelection") {
+        loginSection.classList.remove("show");
+        selectedRole = null;
+        loginError.textContent = "";
+        studentFields.querySelectorAll("input").forEach(i => i.value = "");
+        facultyFields.querySelectorAll("input").forEach(i => i.value = "");
+        adminFields.querySelectorAll("input").forEach(i => i.value = "");
+        
+        dashboard.classList.add("hidden");
+        roleSelection.style.display = "block";
+    } else if (state.screen === "login") {
+        roleSelection.style.display = "block";
+        loginSection.classList.add("show");
+        dashboard.classList.add("hidden");
+        selectedRole = state.role;
+        loginTitle.textContent = `${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)} Login`;
+        studentFields.style.display = "none";
+        facultyFields.style.display = "none";
+        adminFields.style.display = "none";
+        if(selectedRole === "student") studentFields.style.display = "block";
+        if(selectedRole === "faculty") facultyFields.style.display = "block";
+        if(selectedRole === "admin") adminFields.style.display = "block";
+    }
 });
+
 
 // -------------------- LOGIN --------------------
 loginBtn.addEventListener("click", async () => {
@@ -63,9 +83,16 @@ loginBtn.addEventListener("click", async () => {
     if(selectedRole === "student") {
         const roll = document.getElementById("studentRoll").value.trim();
         const pass = document.getElementById("studentPassword").value.trim();
+        const type = document.querySelector('input[name="studentLoginType"]:checked').value;
         if(!roll || !pass) { loginError.textContent = "Please fill all fields!"; return; }
-        payload = { studentRollNumber: roll, password: pass };
-        url = "/student/validate";
+        
+        if (type === "event") {
+            payload = { rollNumber: roll, password: pass };
+            url = "/event/student/login";
+        } else {
+            payload = { studentRollNumber: roll, password: pass };
+            url = "/student/validate";
+        }
 
     } else if(selectedRole === "faculty") {
         const email = document.getElementById("facultyEmail").value.trim();
@@ -108,6 +135,21 @@ loginBtn.addEventListener("click", async () => {
 			    sessionStorage.setItem("user", JSON.stringify(loggedInUser));
 			    sessionStorage.setItem("role", selectedRole);
 
+                if (selectedRole === "student") {
+                    const type = document.querySelector('input[name="studentLoginType"]:checked').value;
+                    sessionStorage.setItem("studentLoginType", type);
+                    // Standardize keys for feature access
+                    sessionStorage.setItem("department", responseData.department || "");
+                    sessionStorage.setItem("year", responseData.year || "");
+                    sessionStorage.setItem("section", responseData.section || "");
+                }
+                
+                if (responseData.rollNumber) {
+                    sessionStorage.setItem("rollNumber", responseData.rollNumber);
+                } else if (responseData.studentRollNumber) {
+                    sessionStorage.setItem("rollNumber", responseData.studentRollNumber);
+                }
+
 			    loginError.style.color = "green";
 			    loginError.textContent = "Login Successful!";
 
@@ -126,6 +168,7 @@ loginBtn.addEventListener("click", async () => {
                 loginError.textContent = "";
                 roleSelection.style.display = "none"; // hide roles
                 showDashboard();
+                history.pushState({ screen: "dashboard" }, "");
             }, 500);
 
         } else {
@@ -142,15 +185,14 @@ loginBtn.addEventListener("click", async () => {
 function showDashboard(){
 	    dashboard.classList.remove("hidden");
 
-		if (selectedRole === "student") {
-		    welcomeMsg.innerHTML = `Welcome <span class="student-name">${loggedInUser.name}</span>`;
+		if (selectedRole === "student" || selectedRole === "EVENT_STUDENT") {
+		    welcomeMsg.innerHTML = `Welcome, <span class="student-name">${loggedInUser.name || "Student"}</span> <span style="font-size: 16px; font-weight: 400; color: #666; display: block; margin-top: 4px;">(Student)</span>`;
 		} 
 		else if (selectedRole === "faculty") {
-		    welcomeMsg.innerHTML = `Welcome <span class="faculty-name">${loggedInUser.facultyName}</span>`;
+		    welcomeMsg.innerHTML = `Welcome, <span class="faculty-name">${loggedInUser.facultyName || "Faculty"}</span> <span style="font-size: 16px; font-weight: 400; color: #666; display: block; margin-top: 4px;">(Faculty)</span>`;
 		} 
 		else {
-		    welcomeMsg.textContent =
-		      `Welcome ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}`;
+		    welcomeMsg.innerHTML = `Welcome, <span style="color: #6a0dad; font-weight: 800;">Administrator</span>`;
 		}
 
 
@@ -158,26 +200,100 @@ function showDashboard(){
     facultyDashboard.classList.add("hidden");
     adminDashboard.classList.add("hidden");
 
-    if(selectedRole === "student") studentDashboard.classList.remove("hidden");
+    if(selectedRole === "student" || selectedRole === "EVENT_STUDENT") studentDashboard.classList.remove("hidden");
     if(selectedRole === "faculty") facultyDashboard.classList.remove("hidden");
     if(selectedRole === "admin") adminDashboard.classList.remove("hidden");
 
-    // Logout handlers
+    // Profile Handlers
+    const profileBtn = document.getElementById("profileBtn");
+    const profileDropdown = document.getElementById("profileDropdown");
+    const viewProfileDetails = document.getElementById("viewProfileDetails");
+    const viewHelpLink = document.getElementById("viewHelpLink");
+    const profileLogout = document.getElementById("profileLogout");
+
+    profileBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle("hidden");
+    });
+
+    document.addEventListener("click", () => profileDropdown?.classList.add("hidden"));
+
+    viewProfileDetails?.addEventListener("click", () => {
+        const user = loggedInUser;
+        let detailsHtml = "";
+        if (selectedRole === "student" || selectedRole === "EVENT_STUDENT") {
+            detailsHtml = `
+                <div style="text-align:left; line-height:1.8;">
+                    <p><strong>Name:</strong> ${user.name}</p>
+                    <p><strong>Roll No:</strong> ${user.rollNumber}</p>
+                    <p><strong>Dept:</strong> ${user.department}</p>
+                    <p><strong>Year:</strong> ${user.year}</p>
+                    <p><strong>Section:</strong> ${user.section}</p>
+                    <p><strong>Email:</strong> ${user.email}</p>
+                </div>`;
+        } else if (selectedRole === "faculty") {
+            detailsHtml = `
+                <div style="text-align:left; line-height:1.8;">
+                    <p><strong>Name:</strong> ${user.facultyName}</p>
+                    <p><strong>ID:</strong> ${user.facultyId}</p>
+                    <p><strong>Dept:</strong> ${user.department}</p>
+                    <p><strong>Email:</strong> ${user.email}</p>
+                </div>`;
+        } else {
+            detailsHtml = `<p><strong>Role:</strong> Administrator</p>`;
+        }
+        showProfileModal("My Profile Details", detailsHtml);
+    });
+
+    // Help Logic
+    if (selectedRole === "student" || selectedRole === "EVENT_STUDENT") {
+        viewHelpLink.style.display = "none";
+    }
+
+    viewHelpLink?.addEventListener("click", () => {
+        if (selectedRole === "faculty") {
+            window.open("faculty_help.html", "_blank");
+        } else if (selectedRole === "admin") {
+            window.open("admin_help.html", "_blank");
+        }
+    });
+
+    profileLogout?.addEventListener("click", logout);
+
+    // Logout handlers (Old ones)
     document.getElementById("studentLogout")?.addEventListener("click", logout);
     document.getElementById("facultyLogout")?.addEventListener("click", logout);
     document.getElementById("adminLogout")?.addEventListener("click", logout);
+}
+
+function showProfileModal(title, bodyHtml) {
+    let m = document.getElementById("profileModal");
+    if(!m) {
+        m = document.createElement("div");
+        m.id = "profileModal";
+        m.className = "modal hidden";
+        m.innerHTML = `
+            <div class="modal-content">
+                <h2 id="pmTitle" style="color:#6a0dad;"></h2>
+                <div id="pmBody" style="margin:20px 0;"></div>
+                <button class="modal-btn" onclick="document.getElementById('profileModal').classList.add('hidden')">Close</button>
+            </div>`;
+        document.body.appendChild(m);
+    }
+    document.getElementById("pmTitle").textContent = title;
+    document.getElementById("pmBody").innerHTML = bodyHtml;
+    m.classList.remove("hidden");
 }
 
 // -------------------- LOGOUT --------------------
 function logout(){
     loggedInUser = null;
     selectedRole = null;
-    //sessionStorage.removeItem("role");
-    //sessionStorage.removeItem("user");
 	sessionStorage.clear();
 
     dashboard.classList.add("hidden");
     roleSelection.style.display = "block"; // show roles again
+    history.pushState({ screen: "roleSelection" }, "");
 }
 window.addEventListener("load", () => {
     const savedRole = sessionStorage.getItem("role");
@@ -199,6 +315,9 @@ window.addEventListener("load", () => {
 
         roleSelection.style.display = "none";
         showDashboard();
+        history.replaceState({ screen: "dashboard" }, "");
+    } else {
+        history.replaceState({ screen: "roleSelection" }, "");
     }
 });
 document.addEventListener("click", function (e) {

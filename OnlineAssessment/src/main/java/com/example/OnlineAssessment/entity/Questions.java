@@ -31,7 +31,15 @@ public class Questions {
     @JsonManagedReference
     private Options options;
 
+    private int marks = 1;
+    private double negativeMarks = 0.0;
+    
+    @jakarta.persistence.Transient
+    private boolean multiple;
+
     // Getters & Setters
+    public boolean isMultiple() { return multiple; }
+    public void setMultiple(boolean multiple) { this.multiple = multiple; }
     public String getQuestionId() { return questionId; }
     public void setQuestionId(String questionId) { this.questionId = questionId; }
 
@@ -43,4 +51,10 @@ public class Questions {
 
     public Options getOptions() { return options; }
     public void setOptions(Options options) { this.options = options; }
+
+    public int getMarks() { return marks; }
+    public void setMarks(int marks) { this.marks = marks; }
+
+    public double getNegativeMarks() { return negativeMarks; }
+    public void setNegativeMarks(double negativeMarks) { this.negativeMarks = negativeMarks; }
 }

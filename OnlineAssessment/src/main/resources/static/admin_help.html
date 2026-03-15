@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Guide - MITS Assessment Portal</title>
+    <style>
+        :root {
+            --primary: #1e293b;
+            --secondary: #6366f1;
+            --accent: #f59e0b;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            line-height: 1.6; 
+            color: var(--text-main); 
+            background: var(--bg);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .card { 
+            background: var(--card-bg); 
+            padding: 45px; 
+            border-radius: 32px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border);
+        }
+
+        h1 { 
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
+        }
+
+        .admin-note { 
+            background: #fffbeb; 
+            padding: 24px; 
+            border-radius: 20px; 
+            border-left: 6px solid var(--accent); 
+            margin-bottom: 35px;
+            font-size: 0.95rem;
+        }
+
+        h2 { 
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-top: 45px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .feature-item strong {
+            display: block;
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        th { background: #f1f5f9; color: var(--text-muted); }
+
+        .footer { 
+            text-align: center; 
+            margin-top: 50px; 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+        }
+
+        .badge {
+            background: var(--secondary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🛠️ Enterprise Administration</h1>
+            
+            <div class="admin-note">
+                <strong>Super Admin Privilege:</strong> You are accessing the core configuration layer. Actions taken here immediately affect the entire database and user access levels.
+            </div>
+
+            <h2>1. Institutional Oversight</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <strong>College Lifecycle:</strong>
+                    Manage institutional access. You can register new colleges under the MITS umbrella, update their branding, and monitor their active user counts.
+                </div>
+                <div class="feature-item">
+                    <strong>Global Kill-Switch:</strong>
+                    If an institution violates policy or subscription terms, setting their status to <code>DEACTIVATED</code> will lock all related Faculty, Student, and Admin accounts instantly.
+                </div>
+            </div>
+
+            <h2>2. Faculty Governance</h2>
+            <p>Maintain the backbone of the assessment engine by managing faculty credentials.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Excel Column</th>
+                        <th>Field Name</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>Faculty Name</td><td>Public display name</td></tr>
+                    <tr><td>1</td><td>Email</td><td>Login username (Must be unique)</td></tr>
+                    <tr><td>2</td><td>Department</td><td>Links faculty to specific student batches</td></tr>
+                    <tr><td>3</td><td>Institution ID</td><td>The parent college code</td></tr>
+                </tbody>
+            </table>
+
+            <h2>3. Global Schematics</h2>
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <strong>Departmental Hierarchy:</strong>
+                    Create new departments (e.g., AI&DS, CSBS) to update the dropdown selections across the entire portal. Ensure spellings match your Excel data exactly.
+                </div>
+                <div class="feature-item">
+                    <strong>Privilege Matrix:</strong>
+                    Grant or revoke high-level features like <i>Real-time Proctoring</i>, <i>Advanced Analytics</i>, or <i>Event-Only Portals</i> for individual colleges.
+                </div>
+            </div>
+
+            <h2>4. Technical Audits</h2>
+            <div class="feature-item">
+                <strong>Data Synchronization:</strong> If data appears mismatched, perform an "Audit Sync" via the dashboard to recalibrate relational mappings between students and their respective departments.
+            </div>
+
+        </div>
+
+        <div class="footer">
+            &copy; 2025 MITS Assessment Portal | <b>Developed by Vineeth Sai & Yaswanth Reddy</b><br>
+            <i>Dept of CSE (2023-2027) | Mentor: Mr. B Anandaraj Asst.Prof</i>
+        </div>
+    </div>
+</body>
+</html>

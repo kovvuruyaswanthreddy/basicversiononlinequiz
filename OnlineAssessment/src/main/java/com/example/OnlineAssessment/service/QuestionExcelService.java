@@ -64,6 +64,17 @@ public class QuestionExcelService {
                         formatter.formatCellValue(row.getCell(0)).trim()
                 );
                 q.setQuiz(quiz);
+                
+                String marksStr = formatter.formatCellValue(row.getCell(6)).trim();
+                if (!marksStr.isEmpty()) {
+                    try { q.setMarks(Integer.parseInt(marksStr)); } catch(Exception e) {}
+                }
+
+                String negMarksStr = formatter.formatCellValue(row.getCell(7)).trim();
+                if (!negMarksStr.isEmpty()) {
+                    try { q.setNegativeMarks(Double.parseDouble(negMarksStr)); } catch(Exception e) {}
+                }
+
                 questionRepo.save(q); // UUID generated here
 
                 // OPTIONS

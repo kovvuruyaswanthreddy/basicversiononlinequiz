@@ -1,282 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Faculty Help - MITS Assessment Portal</title>
-  <link rel="stylesheet" href="faculty_help.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Help Guide - MITS Assessment Portal</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ff6b6b;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            line-height: 1.6; 
+            color: var(--text-main); 
+            background: var(--bg);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container { 
+            max-width: 1000px; 
+            margin: 0 auto; 
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            padding: 40px; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        h1 { 
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h2 { 
+            font-size: 1.75rem;
+            color: var(--primary-dark); 
+            margin-top: 40px; 
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-top: 25px;
+            border-left: 4px solid var(--secondary);
+            padding-left: 15px;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .step { 
+            margin-bottom: 15px; 
+            background: #f1f5f9; 
+            padding: 20px; 
+            border-radius: 16px; 
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .step:hover {
+            transform: translateY(-2px);
+        }
+
+        .step strong { color: var(--primary-dark); display: block; margin-bottom: 5px; font-size: 1.1rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8fafc; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .format-note {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        .footer { 
+            text-align: center; 
+            margin-top: 60px; 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+        }
+
+        code { 
+            background: #fee2e2; 
+            color: #b91c1c;
+            padding: 2px 6px; 
+            border-radius: 6px; 
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
 </head>
 <body>
-  <div class="help-container">
-    <button class="close-btn" onclick="window.close()">×</button>
-    <h2>Faculty Help Guide</h2>
+    <div class="container">
+        <div class="card">
+            <h1>📑 Faculty Comprehensive Guide</h1>
+            <p class="section-desc">Everything you need to know about managing exams, uploading spreadsheets, and tracking student performance on the MITS Assessment Portal.</p>
 
-    <ul class="help-list">
+            <!-- 1. ACADEMIC MODULE -->
+            <h2>🏫 Academic Exams Module</h2>
+            <div class="step">
+                <strong>1. Initial Setup:</strong>
+                First, navigate to <code>Academic Exams</code> > <code>Create Quiz</code>. You must create a unique <b>Quiz ID</b> (e.g., 23-CSE-JAVA-01) before you can upload questions.
+            </div>
 
-      <!-- 🟢 UPLOAD STUDENT EXCEL -->
-      <li>
-        <div class="section-header">
-          <button class="demo-btn">Upload Student Excel</button>
-        </div>
-        <div class="section-body">
-          <p>Upload the student details for your course using an <b>.xlsx</b> file.</p>
-          <ul>
-            <li>The Excel file must be in the following format:</li>
-			<li>			<a href="/model_sheets/Student_Data_Templet.xlsx" 
-			           class="faculty-btn blinking" 
-			           download>
-			           Download Student Data Template
-			        </a>
-			</li>
-          </ul>
-			
-          <div class="table-wrapper">
+            <div class="step">
+                <strong>2. Question Management:</strong>
+                Use the <code>Upload Questions</code> tool. The system will map your Excel rows to database entries. Once questions are uploaded for a specific Quiz ID, they cannot be modified to maintain integrity.
+            </div>
+
+            <div class="step">
+                <strong>3. Quiz Activation:</strong>
+                Go to <code>Activate Quiz</code>. Here you bridge the quiz to a specific batch. Select the Department, Year (1-4), and Section (A-J). Set a timer in minutes.
+            </div>
+
+            <div class="step">
+                <strong>4. Result Publishing:</strong>
+                Students cannot see their scores even after submission until you <code>Publish Results</code>. This prevents the sharing of answers during active exam windows.
+            </div>
+
+            <!-- 2. EVENTS MODULE -->
+            <h2>🏆 Events & Hackathons</h2>
+            <div class="step">
+                <strong>1. Create Event:</strong>
+                Events are independent of academic batches. Create an <b>Event ID</b> (e.g., CODERALLY-2025).
+            </div>
+
+            <div class="step">
+                <strong>2. Participant Registration:</strong>
+                Unlike academic students, event students are uploaded specifically to an event. Use the <code>Upload Event Students</code> feature.
+            </div>
+
+            <div class="step">
+                <strong>3. Event Quiz Flow:</strong>
+                Activate quizzes within the event. These quizzes are only accessible to students whose Roll Numbers are registered for that specific Event ID.
+            </div>
+
+            <!-- 3. EXCEL FORMATS -->
+            <h2>📊 Excel Upload Formats</h2>
+            <p class="section-desc">Ensure your Excel sheets follow these exact column orderings. Row 1 is reserved for headers (ignored by system).</p>
+
+            <h3>1. Students Excel Format (Academic/Events)</h3>
             <table>
-              <tr>
-                <th>student_roll_number</th>
-                <th>student_name</th>
-                <th>student_section</th>
-                <th>student_year</th>
-                <th>department</th>
-                <th>student_email</th>
-              </tr>
-              <tr>
-                <td>23691A05O2</td>
-                <td>Vineeth Padam</td>
-                <td>D</td>
-                <td>3</td>
-                <td>CSE</td>
-                <td>23691A05O2@mits.ac.in</td>
-              </tr>
-              <tr>
-                <td>23691A05Q4</td>
-                <td>Yashwanth Reddy Kovvuru</td>
-                <td>D</td>
-                <td>3</td>
-                <td>CSE</td>
-                <td>23691A05Q4@mits.ac.in</td>
-              </tr>
+                <thead>
+                    <tr>
+                        <th>Col</th>
+                        <th>Header Name</th>
+                        <th>Format / Values</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>Roll Number</td><td>String (Unique)</td><td>23691A05Q4</td></tr>
+                    <tr><td>1</td><td>Name</td><td>Full Name</td><td>John Doe</td></tr>
+                    <tr><td>2</td><td>Section</td><td>A, B, C, D, ... J</td><td>C</td></tr>
+                    <tr><td>3</td><td>Year</td><td>1, 2, 3, or 4</td><td>2</td></tr>
+                    <tr><td>4</td><td>Department</td><td>Full Dept Name</td><td>CSE</td></tr>
+                    <tr><td>5</td><td>Email</td><td>Valid Email</td><td>john@mits.ac.in</td></tr>
+                </tbody>
             </table>
-          </div>
-        </div>
-		<!-- Reference Video for Upload Student Data -->
-		<div class="video-container" style="text-align:center; margin:20px 0;">
-		    <h3 style="color:#1976d2; margin-bottom:10px;">Reference Video</h3>
-		    <video id="uploadStudentVideo" width="600" height="340" controls style="border: 2px solid #1976d2; border-radius: 10px;">
-		        <source src="/Reference_video/Upload%20student%20data.mp4" type="video/mp4">
-		        Your browser does not support the video tag.
-		    </video>
-		    <p style="font-size:14px; color:#555; margin-top:8px;">
-		        Watch this reference video for guidance on uploading student data.
-		    </p>
-		</div>
+            <div class="format-note">
+                <strong>Note:</strong> For <b>Events Excel</b>, you can add two extra columns at index 6 (Event ID) and 7 (Event Name) if you want to create the event and register the student simultaneously.
+            </div>
 
-		<script>
-		    // Stop video after it finishes playing
-		    const video = document.getElementById('uploadStudentVideo');
-		    video.addEventListener('ended', () => {
-		        video.pause(); // ensure it stops at the end
-		    });
-		</script>
-
-      </li>
-
-      <!-- 🟣 ADD QUIZ SECTION -->
-      <li>
-        <div class="section-header">
-          <button class="demo-btn">Add Quiz</button>
-        </div>
-
-        <div class="section-body">
-          <p>Create new quizzes with questions and multiple options using the Add Quiz feature.</p>
-
-          <ol class="steps">
-            <li>Click on the <b>Add Quiz</b> button to start creating a new quiz.</li>
-            <li>Enter the <b>Quiz ID</b> in the required format:</li>
-          </ol>
-
-          <div class="example-box">
-            <p><b>Example Quiz IDs:</b></p>
-            <ul>
-              <li><b>2305-JAVA-01</b> → Same question paper for all sections in a department.</li>
-              <li><b>2305A-FSDII-01</b> → Different question papers for different sections.</li>
-            </ul>
-          </div>
-
-          <div class="explanation-box">
-            <h4>Explanation of Quiz ID Format:</h4>
-            <ul>
-              <li><b>23</b> – Joining year of the student batch.</li>
-              <li><b>05</b> – Department code.</li>
-              <li><b>JAVA / FSDII</b> – Subject name.</li>
-              <li><b>01</b> – Assessment number (01 for Assessment-1, 02 for Assessment-2, etc.).</li>
-              <li><b>A</b> – Section identifier (used only if different papers for each section).</li>
-            </ul>
-          </div>
-
-          <ol start="3" class="steps">
-            <li>After entering the Quiz ID, click <b>Submit</b>.</li>
-            <li>Choose the <b>Excel file</b> of the question paper to upload.</li>
-            <li>The Excel must contain the following columns:</li>
-          </ol>
-
-		  <div class="download-template">
-		    <p>Download the Excel template for questions:</p>
-			<a href="/model_sheets/Question%20paper%20model.xlsx" 
-			   class="faculty-btn blinking" 
-			   download>
-			   Download Question Paper Template
-			</a>
-
-		  </div>
-          <div class="table-wrapper">
+            <h3>2. Questions Excel Format</h3>
             <table>
-              <tr>
-                <th>Question TEXT</th>
-                <th>Option1</th>
-                <th>Option2</th>
-                <th>Option3</th>
-                <th>Option4</th>
-                <th>Correctoption</th>
-              </tr>
-              <tr>
-                <td>Which language is platform independent?</td>
-                <td>Java</td>
-                <td>C</td>
-                <td>C++</td>
-                <td>Python</td>
-                <td>option1</td>
-              </tr>
-              <tr>
-                <td>Select multiple OOP languages:</td>
-                <td>Python</td>
-                <td>Java</td>
-                <td>C</td>
-                <td>C++</td>
-                <td>option1,option2,option4</td>
-              </tr>
+                <thead>
+                    <tr>
+                        <th>Col</th>
+                        <th>Header Name</th>
+                        <th>Required Type</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>Question Text</td><td>Long Text/HTML</td><td>What is Java?</td></tr>
+                    <tr><td>1</td><td>option1</td><td>Normal Text</td><td>Programming Language</td></tr>
+                    <tr><td>2</td><td>option2</td><td>Normal Text</td><td>Coffee Brand</td></tr>
+                    <tr><td>3</td><td>option3</td><td>Normal Text</td><td>Operating System</td></tr>
+                    <tr><td>4</td><td>option4</td><td>Normal Text</td><td>Car Model</td></tr>
+                    <tr><td>5</td><td>Correct Option</td><td>option1, option2, option3, or option4</td><td>option1</td></tr>
+                    <tr><td>6</td><td>Marks</td><td>Integer</td><td>2</td></tr>
+                    <tr><td>7</td><td>Negative Marks</td><td>Decimal (0.5, 1)</td><td>0.5</td></tr>
+                </tbody>
             </table>
-          </div>
+            <div class="format-note">
+                <strong>Multi-Select Support:</strong> To allow multiple correct answers, enter them comma-separated (e.g., <code>option1,option3</code>). The system will automatically convert the question to a checkbox format for students.
+            </div>
 
-          <div class="note-box">
-            <h4>Note:</h4>
-            <ul>
-              <li>For <b>single correct answers</b>, use format: <b>option1</b>.</li>
-              <li>For <b>multiple correct answers</b>, use format: <b>option1,option3</b> (no spaces between commas).</li>
-			  <li>Make Sure that the  <b>correct option </b> should be  <b>named </b> as  <b>option1, option2, option3, option4 </b>only  <b>(All Should be Lower Case)</b>.</li>
-			  <li>You Should  <b>not keep </b> as <b> A B C D or any other </b>.</li>
-            </ul>
-          </div>
-        </div>
-		<!-- Add Quiz Reference Video -->
-		<div class="video-container" style="text-align:center; margin:25px 0;">
-		    
-		    <!-- Title -->
-		    <h3 style="color:#1976d2; margin-bottom:12px;">
-		        Reference Video – Add Quiz
-		    </h3>
+            <!-- 4. RESULTS & DATA -->
+            <h2>📑 Result Management</h2>
+            <div class="step">
+                <strong>View Class Results:</strong> Filter by Quiz ID, Dept, Year, and Section. The table shows Rank, Gained Marks, Total Marks, and Submission Time.
+            </div>
+            <div class="step">
+                <strong>Excel Export:</strong> Click the "Download Excel" button in the results view to get a formatted spreadsheet of the student performances including their pass/fail status.
+            </div>
 
-		    <!-- Video -->
-		    <video id="addQuizVideo"
-		           width="600"
-		           height="340"
-		           controls
-		           style="border:2px solid #1976d2; border-radius:10px;">
-		        
-		        <source src="/Reference_video/Add%20quiz%20Reference%20Video.mp4" type="video/mp4">
-		        Your browser does not support the video tag.
-		    </video>
+            <!-- 5. SECURITY -->
+            <h2>🛡️ Security & Anti-Cheat</h2>
+            <div class="step">
+                <strong>Focus Tracking:</strong> If a student attempts to leave the tab or minimize the browser, a warning is issued. On the 3rd attempt, the exam is INSTANTLY submitted and locked.
+            </div>
+            <div class="step">
+                <strong>Idempotency:</strong> The portal prevents double-submissions. If a network failure occurs, students can refresh and their previous answers will be auto-recovered from the local session.
+            </div>
 
-		    <!-- Note -->
-		    <p style="font-size:14px; color:#555; margin-top:8px;">
-		        This video explains how to add a quiz and upload the question paper Excel.
-		    </p>
-		</div>
-
-		<script>
-		    // Ensure video stops after finishing (no repeat)
-		    const addQuizVideo = document.getElementById("addQuizVideo");
-		    addQuizVideo.addEventListener("ended", () => {
-		        addQuizVideo.pause();
-		    });
-		</script>
-
-      </li>
-
-      <!-- 🟡 ACTIVATE QUIZ -->
-      <li>
-        <div class="section-header">
-          <button class="demo-btn">Activate Quiz</button>
         </div>
 
-        <div class="section-body">
-          <p>
-            Activate the quiz for specific <b>Department</b>, <b>Year</b>, and <b>Section</b> so that only those students can attempt it.
-          </p>
-          <ul>
-            <li>Enter the <b>Quiz ID</b> you created earlier.</li>
-            <li>Select the corresponding <b>Department</b>, <b>Year</b>, <b>Section</b> and <b>Time</b>(If Required).</li>
-            <li>Click on the <b>Activate</b> button to enable the quiz for those students.</li>
-          </ul>
-          <div class="example-box">
-            <p>Example:</p>
-            <p><b>Quiz ID:</b> 2305A-JAVA-01 → Activated for Department: CSE, Year: 3, Section: A with Duration : 30 Min</p>
-          </div>
+        <div class="footer">
+            &copy; 2025 MITS Assessment Portal | <b>Developed by Vineeth Sai & Yaswanth Reddy</b><br>
+            <i>Dept of CSE (2023-2027) | Mentor: Mr. B Anandaraj Asst.Prof</i>
         </div>
-      </li>
-
-      <!-- 🔵 VIEW CLASS RESULTS -->
-      <li>
-        <div class="section-header">
-          <button class="demo-btn">View Class Results</button>
-        </div>
-
-        <div class="section-body">
-          <p>
-            Faculty can view quiz performance and student scores after completion of the quiz.
-          </p>
-          <ul>
-            <li>Select the <b>Quiz ID</b>, <b>Department</b>, and <b>Section</b>.</li>
-            <li>Click <b>View Results</b> to display the marks of each student.</li>
-            <li>Click the <b>Download</b> button to export results in <b>Excel format (.xlsx)</b>.</li>
-          </ul>
-          <div class="example-box">
-            <p>Example Result Columns:</p>
-            <ul>
-              <li><b>student_roll_number</b></li>
-              <li><b>student_name</b></li>
-              <li><b>Quiz Id</b></li>
-              <li><b>Score</b></li>
-            </ul>
-          </div>
-        </div>
-      </li>
-
-      <!-- 🔴 PUBLISH RESULT -->
-      <li>
-        <div class="section-header">
-          <button class="demo-btn">Publish Result</button>
-        </div>
-
-        <div class="section-body">
-          <p>
-            Until results are published, <b>students cannot view their marks or answer keys</b>.
-          </p>
-          <ul>
-            <li>After verifying all submissions and marks, click <b>Publish Result</b>.</li>
-            <li>Once published, students can see their <b>scores and correct answers</b>.</li>
-            <li>Ensure the correct quiz is selected before publishing.</li>
-          </ul>
-        </div>
-		<!-- ✳️ FOOTER NOTE -->
-		    <div class="footer-note">
-		      We hope this guide helped you to efficiently upload student data, create and activate quizzes, and publish results using the <b>MITS Assessment Portal</b>.
-			  <p style="text-align: center;"><strong>Thank you......</strong></p>
-
-		    </div>
-		
-      </li>
-    </ul>
-  </div>
+    </div>
 </body>
 </html>

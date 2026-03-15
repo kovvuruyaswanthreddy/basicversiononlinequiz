@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Class Results | MITS Online Assessment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6a0dad;
+            --secondary: #ff6600;
+            --bg: #f8f9fa;
+            --text: #333;
+            --card-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .filters-summary {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .filters-summary span {
+            background: #f1f1f1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-secondary { background: var(--secondary); color: #fff; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid #eee;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: #fff;
+            padding: 15px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        tr:nth-child(even) { background: #fafafa; }
+        tr:hover { background: #f1f1f1; }
+
+        .rank-badge {
+            background: #ede7f6;
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 800;
+        }
+
+        .status-pass { color: #2e7d32; font-weight: 700; }
+        .status-fail { color: #c62828; font-weight: 700; }
+
+        /* Loading Spinner */
+        #loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 400px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media print {
+            .btn, .actions { display: none; }
+            body { padding: 0; }
+            .container { box-shadow: none; border-radius: 0; max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div>
+            <h1>📊 Academic Quiz Ranking</h1>
+            <div id="filterSummary" class="filters-summary">
+                <span id="labelQuiz">Quiz: --</span>
+                <span id="labelDept">Dept: All</span>
+                <span id="labelBatch">Batch: All</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn btn-secondary" onclick="downloadExcel()">📥 Download Excel</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Print Results</button>
+        </div>
+    </div>
+
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="table-container" id="tableWrapper" style="display:none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Roll Number</th>
+                    <th>Full Name</th>
+                    <th>Quiz ID</th>
+                    <th>Quiz Name</th>
+                    <th>Year</th>
+                    <th>Dept</th>
+                    <th>Sec</th>
+                    <th>Score</th>
+                    <th>Total</th>
+                    <th>%</th>
+                    <th>Status</th>
+                    <th>Submission Time</th>
+                </tr>
+            </thead>
+            <tbody id="resBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const quizId = params.get('quizId');
+    const department = params.get('department');
+    const year = params.get('year');
+    const section = params.get('section');
+    const sortBy = params.get('sortBy') || 'rank';
+
+    async function loadData() {
+        if (!quizId) {
+            alert("No Quiz ID provided.");
+            return;
+        }
+
+        // Update Labels
+        document.getElementById('labelQuiz').innerText = `Quiz: ${quizId}`;
+        if (department) document.getElementById('labelDept').innerText = `Dept: ${department}`;
+        if (year && section) document.getElementById('labelBatch').innerText = `${year} Year - ${section} Sec`;
+        else if (year) document.getElementById('labelBatch').innerText = `${year} Year`;
+
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            alert("Unauthorized. Please login as faculty.");
+            window.close();
+            return;
+        }
+
+        let query = `quizId=${quizId}&sortBy=${sortBy}`;
+        if (department) query += `&department=${department}`;
+        if (year) query += `&year=${year}`;
+        if (section) query += `&section=${section}`;
+
+        try {
+            const res = await fetch(`/results/faculty/ranking?${query}`, {
+                headers: { "Authorization": "Bearer " + token }
+            });
+
+            if (!res.ok) throw new Error("Failed to fetch results");
+
+            const data = await res.json();
+            renderTable(data);
+        } catch (err) {
+            alert(err.message);
+        } finally {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('tableWrapper').style.display = 'block';
+        }
+    }
+
+    function renderTable(results) {
+        const tbody = document.getElementById('resBody');
+        tbody.innerHTML = results.map(r => {
+            const percentage = ((r.score / r.totalMarks) * 100).toFixed(1);
+            const time = new Date(r.submissionTime).toLocaleString();
+            return `
+                <tr>
+                    <td><span class="rank-badge">${r.rank}</span></td>
+                    <td><b>${r.student.studentRollNumber}</b></td>
+                    <td>${r.student.studentName}</td>
+                    <td>${r.quiz.quizId}</td>
+                    <td>${r.quiz.quizName}</td>
+                    <td>${r.student.studentYear}</td>
+                    <td>${r.student.department}</td>
+                    <td>${r.student.studentSection}</td>
+                    <td style="color:var(--primary); font-weight:bold;">${r.score}</td>
+                    <td>${r.totalMarks}</td>
+                    <td>${percentage}%</td>
+                    <td><span class="${r.passFail === 'Pass' ? 'status-pass' : 'status-fail'}">${r.passFail}</span></td>
+                    <td style="font-size:12px; color:#555;">${time}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    async function downloadExcel() {
+        const token = sessionStorage.getItem("token");
+        let url = `/results/download?quizId=${quizId}`;
+        if (department) url += `&department=${department}`;
+        if (year) url += `&year=${year}`;
+        if (section) url += `&section=${section}`;
+
+        const res = await fetch(url, { headers: { "Authorization": "Bearer " + token } });
+        if (res.ok) {
+            const blob = await res.blob();
+            const link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = `Results_${quizId}.xlsx`;
+            link.click();
+        } else {
+            alert("Download failed.");
+        }
+    }
+
+    loadData();
+</script>
+</body>
+</html>

@@ -57,16 +57,16 @@ public class ResultExcelService {
         for (int i = 0; i < results.size(); i++) {
             Result r = results.get(i);
 
-            int totalMarks = r.getQuiz().getQuestions().size();
+            int totalMarks = r.getQuiz().getQuestions().stream()
+                              .mapToInt(com.example.OnlineAssessment.entity.Questions::getMarks)
+                              .sum();
             r.setTotalMarks(totalMarks);
 
-            String passFail =
-                    ((double) r.getScore() / totalMarks) * 100 >= 40
-                            ? "Pass" : "Fail";
+            String passFail = (totalMarks > 0 && (r.getScore() / totalMarks) * 100 >= 40)
+                              ? "Pass" : "Fail";
             r.setPassFail(passFail);
 
-            if (i > 0 &&
-                    r.getScore() == results.get(i - 1).getScore()) {
+            if (i > 0 && r.getScore() == results.get(i - 1).getScore()) {
                 r.setRank(results.get(i - 1).getRank());
             } else {
                 r.setRank(rank);

@@ -14,6 +14,9 @@ import com.example.OnlineAssessment.entity.Student;
 import com.example.OnlineAssessment.service.QuestionService;
 import com.example.OnlineAssessment.service.QuizService;
 import com.example.OnlineAssessment.service.StudentService;
+import com.example.OnlineAssessment.entity.Options;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/quiz")
@@ -107,7 +110,21 @@ public class QuizController {
         if (!isActive) {
             throw new RuntimeException("You cannot attempt this quiz. Quiz is not active for your class.");
         }
-        return questionService.getQuestionsByQuizId(quizId);
+        List<Questions> questions = questionService.getQuestionsByQuizId(quizId);
+        for (Questions q : questions) {
+            Options opt = q.getOptions();
+            if (opt != null && opt.getCorrectOption() != null) {
+                // If comma-separated, it's a multiple-choice question
+                q.setMultiple(opt.getCorrectOption().contains(","));
+                
+                // SECURITY: Remove correct option before sending to student!
+                // Note: This modifies the object in memory. 
+                // Since this is a @GetMapping, usually it's not marked Transactional,
+                // but for safety, we are just clearing it for the JSON response.
+                opt.setCorrectOption(null);
+            }
+        }
+        return questions;
     }
 
     // ✅ Fetch questions by quizId (general use)
@@ -143,7 +160,45 @@ public class QuizController {
                     .body(e.getMessage());
         }
     }
+    @GetMapping("/{quizId}/key")
+    public ResponseEntity<?> getQuizKey(
+            @PathVariable String quizId,
+            @RequestParam(required = false) String section,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) Integer year) {
+        
+        if (section == null || department == null || year == null || 
+            "null".equals(section) || "null".equals(department)) {
+            return ResponseEntity.status(HttpStatus.OK).body(List.of()); // Return empty key if details missing
+        }
+        
+        if (!quizService.areResultsPublished(quizId, section, department, year)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Results not yet published.");
+        }
 
+        List<Questions> questions = questionService.getQuestionsByQuizId(quizId);
+        List<Map<String, Object>> keyList = questions.stream().map(q -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("questionId", q.getQuestionId());
+            map.put("questionText", q.getQuestionText());
+            map.put("marks", q.getMarks());
+            map.put("negativeMarks", q.getNegativeMarks());
+            
+            Options opt = q.getOptions();
+            if (opt != null) {
+                map.put("option1", opt.getOption1());
+                map.put("option2", opt.getOption2());
+                map.put("option3", opt.getOption3());
+                map.put("option4", opt.getOption4());
+                map.put("correctOption", opt.getCorrectOption());
+            } else {
+                map.put("correctOption", "N/A");
+            }
+            return map;
+        }).toList();
+
+        return ResponseEntity.ok(keyList);
+    }
 
 
 }

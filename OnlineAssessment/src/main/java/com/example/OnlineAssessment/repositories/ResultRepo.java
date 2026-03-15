@@ -116,6 +116,8 @@ public interface ResultRepo extends JpaRepository<Result, Integer> {
         	        @Param("department") String department,
         	        @Param("year") int year
         	);
+    
+    List<Result> findByStudent_StudentRollNumber(String studentRollNumber);
 
     
 }
